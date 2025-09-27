@@ -1,12 +1,14 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
+import {useRouter} from "vue-router";
+import Swal from "sweetalert2";
 
 const file = ref(null);
 const loading = ref(false);
 const message = ref("");
 const token = localStorage.getItem("token");
-
+const router = useRouter()
 function onFileChange(event) {
   file.value = event.target.files[0];
 }
@@ -41,7 +43,15 @@ const uploadFile = async (e) => {
     setTimeout(() => {
       loading.value = false;
       message.value = response.data.message;
+      Swal.fire({
+        title: "Success!",
+        text: "File Uploaded successfully!",
+        icon: "success"
+      });
+
+       router.push('/analysis')
     }, 3000);
+
 
   } catch (error) {
     setTimeout(() => {
@@ -74,7 +84,7 @@ const uploadFile = async (e) => {
 
         <!-- Show spinner when loading -->
         <div v-else class="d-flex align-items-center">
-          <strong class="me-2">Processing...</strong>
+          <strong class="me-2">Uploading file...</strong>
           <div class="spinner-border" role="status" aria-hidden="true"></div>
         </div>
 
@@ -82,7 +92,6 @@ const uploadFile = async (e) => {
           <p class="text-info">{{ message }}</p>
           <router-link to="/analysis">Click here to view Analysis</router-link>
         </div>
-        <h2>Click the button </h2>
       </form>
     </div>
   </div>
