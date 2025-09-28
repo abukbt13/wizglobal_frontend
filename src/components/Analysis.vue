@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "axios";
-
+import {auth} from "../composables/auth.js";
+const {base_url,authHeader} = auth()
 // Chart.js imports
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from "chart.js";
 import { Bar } from "vue-chartjs";
@@ -38,11 +39,8 @@ const fetchAnalysis = async () => {
   loading.value = true;
   error.value = "";
   try {
-    const response = await axios.get("http://127.0.0.1:8000/api/stock-prices/analysis", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`, // if auth is needed
-      },
-    });
+    const response = await axios.get(base_url.value + 'stock-prices/analysis',authHeader)
+
     analysis.value = response.data;
 
     // Map API response to chart data

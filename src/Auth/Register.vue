@@ -2,7 +2,8 @@
 import { ref } from "vue"
 import axios from "axios"
 import { useRouter } from "vue-router"
-
+import {auth} from "../composables/auth.js";
+const {base_url} = auth()
 const router = useRouter()
 
 // Reactive form state
@@ -21,7 +22,7 @@ const handleRegister = async () => {
   loading.value = true
 
   try {
-    const response = await axios.post("http://127.0.0.1:8000/api/register", {
+    const response = await axios.post(base_url.value + 'register', {
       name: form.value.name,
       email: form.value.email,
       password: form.value.password,
@@ -32,7 +33,7 @@ const handleRegister = async () => {
     localStorage.setItem("token", response.data.token)
 
     // Redirect after successful registration
-    router.push("/dashboard")
+    await router.push("/analysis")
   } catch (err) {
     if (err.response && err.response.data) {
       error.value = err.response.data.message || "Registration failed"
